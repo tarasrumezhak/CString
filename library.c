@@ -6,39 +6,61 @@
 #include <mem.h>
 #endif
 
-int my_str_create(my_str_t *str, size_t buf_size) {
-    str ->capacity_m = buf_size + 1;
-    str ->size_m = 0;
-    str->data = (char *) calloc(str->capacity_m, sizeof(char));
+// Create my_str given starting size
+int my_str_create(my_str_t* str, size_t buf_size) {
+    str->capacity_m = buf_size + 1;
+    str->size_m = 0;
+
+    str->data = (char*) malloc(str->capacity_m);
+
+    // Failed allocation
     if (str->data == NULL) {
         return -1;
     }
+
+    return 0;
+}
+
+void my_str_free(my_str_t* str){
+    free(str->data);
+}
+
+// Створити стрічку із буфером вказаного розміру із переданої С-стрічки
+// buf_size is actually a capacity
+int my_str_from_cstr(my_str_t* str, const char* original, size_t original_size){
+    size_t real_original_size;
+
+    // Measure size of the original string ourselves
+    const char* idx;
+    for (idx = original; *idx; ++idx);
+    real_original_size = idx - original;
+
+    //! [buf_size] менший за її [c-string] розмір -- вважати помилкою, не змінювати стрічку.
+    if (real_original_size > original_size && original_size != 0) {
+        return -1;
+    }
+
+    // They decided to not give us the size of the original string
+    if (original_size == 0) {
+        original_size = real_original_size;
+    }
+
+    // Not enough memory
+    if (original_size > str->capacity_m) {
+        // TODO Realloc
+        return -2;
+    }
+
+    memcpy(str->data, original, original_size);
+
+    str->size_m = original_size;
+    str->capacity_m = original_size * 2 + 1;
+
     return 0;
 }
 
 
-void my_str_free(my_str_t* str){
-    free(str ->data);
-}
-
-
-int my_str_from_cstr(my_str_t* str, const char* cstr, size_t buf_size){
-    if (buf_size == 0) {
-        str ->capacity_m = buf_size + 1;
-    }
-    else if (buf_size < sizeof(str)){
-        return -1;
-    }
-    size_t real_cstring_size = 0;
-    while (*(cstr + real_cstring_size) != '\0') {
-        real_cstring_size += 1;
-    }
-    memcpy(str->data, cstr, real_cstring_size);
-    str->size_m = real_cstring_size;
-    str->capacity_m = real_cstring_size * 2 + 1;
-}
-
-
+// Returns length of my_str
 size_t my_str_size(const my_str_t* str){
     if (str == NULL) {
         return -1;
