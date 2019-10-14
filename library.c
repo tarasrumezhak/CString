@@ -32,3 +32,8 @@ int my_str_from_cstr(my_str_t* str, const char* cstr, size_t buf_size){
         return -1;
     }
 }
+
+
+size_t my_str_size(const my_str_t* str){
+    return sizeof(str) / 4;
+}
