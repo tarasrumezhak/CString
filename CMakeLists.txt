@@ -17,8 +17,7 @@ add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
 enable_testing()
 add_subdirectory(test)
 
-file(GLOB sources "${PROJECT_SOURCE_DIR}/*.h" "${PROJECT_SOURCE_DIR}/*.c")
-list(REMOVE_ITEM tests "${PROJECT_SOURCE_DIR}/main.c")
+file(GLOB sources "${PROJECT_SOURCE_DIR}/*.c")
 
 include_directories("${PROJECT_SOURCE_DIR}")
 
