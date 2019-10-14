@@ -11,6 +11,7 @@
 int main(void) {
     my_str_t x;
     my_str_create(&x, 7);
-    char *cst = "aaaa";
+    char *cst = "Taras";
+    my_str_from_cstr(&x, cst, 0);
 
 }
