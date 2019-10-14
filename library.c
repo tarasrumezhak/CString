@@ -35,5 +35,27 @@ int my_str_from_cstr(my_str_t* str, const char* cstr, size_t buf_size){
 
 
 size_t my_str_size(const my_str_t* str){
-    return sizeof(str) / 4;
+    if (str == NULL) {
+        return -1;
+    }
+    return str->size_m;
+}
+
+
+size_t my_str_capacity(const my_str_t* str){
+    if (str == NULL) {
+        return -1;
+    }
+    return str->capacity_m;
+}
+
+int my_str_empty(const my_str_t* str){
+    if (str->size_m > 0){
+        return 1;
+    }
+    return 0;
+}
+
+int my_str_getc(const my_str_t* str, size_t index){
+
 }
