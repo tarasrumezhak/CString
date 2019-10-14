@@ -20,5 +20,6 @@ int main(void) {
     printf("%i\n", my_str_getc(&str, 2));
     my_str_putc(&str, 2, 'p');
     printf("%s\n", str.data);
+    printf("%zu\n", str.size_m);
 
 }
