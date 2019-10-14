@@ -104,11 +104,19 @@ int my_str_putc(my_str_t* str, size_t index, char c){
 //    return str->data;
 //}
 
-my_str_t* my_str_reserve(my_str_t *str, size_t *buf_size){
-    my_str_t *temp = NULL;
-    temp = (my_str_t*) malloc((int)buf_size * 2);
+// Enlarge my_str
+int my_str_reserve(my_str_t *str, size_t buf_size){
+    if (buf_size < str->capacity_m) return 0;
+
+    char* temp = (char*) malloc(buf_size * 2);
+
+    if (temp == NULL) return -1;
+
     memcpy(temp, str, buf_size);
-    *buf_size *=2;
-    my_str_free(str);
-    return temp;
+    free(str->data);
+
+    str->data = temp;
+    str->capacity_m = buf_size;
+
+    return 0;
 }

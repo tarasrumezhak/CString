@@ -45,3 +45,15 @@ TEST(CStringsTest, my_str_from_cstr) {
     ASSERT_EQ(str.size_m, 8);
     ASSERT_EQ(str.capacity_m, 17);
 }
+
+TEST(CStringsTest, my_str_reserve) {
+    // TODO Fixtures
+    my_str_t str;
+    my_str_create(&str, 100);
+
+    int status = my_str_reserve(&str, 400);
+
+    ASSERT_EQ(status, 0);
+    ASSERT_EQ(str.size_m, 0);
+    ASSERT_EQ(str.capacity_m, 400);
+}
