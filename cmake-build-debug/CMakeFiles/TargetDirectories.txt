@@ -1,3 +1,0 @@
-/home/neizer/CLionProjects/CString/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/neizer/CLionProjects/CString/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/neizer/CLionProjects/CString/cmake-build-debug/CMakeFiles/..dir
