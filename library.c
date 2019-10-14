@@ -76,3 +76,17 @@ int my_str_putc(my_str_t* str, size_t index, char c){
     *(str->data + sizeof(char)*index) = c;
     return 0;
 }
+
+//const char* my_str_get_cstr(my_str_t* str){
+//    *(str->data + sizeof(char)*(str->size_m + 1)) = '\0';
+//    return str->data;
+//}
+
+my_str_t* my_str_reserve(my_str_t *str, size_t *buf_size){
+    my_str_t *temp = NULL;
+    temp = (my_str_t*) malloc((int)buf_size * 2);
+    memcpy(temp, str, buf_size);
+    *buf_size *=2;
+    my_str_free(str);
+    return temp;
+}
