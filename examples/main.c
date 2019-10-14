@@ -1,13 +1,9 @@
-//
-// Created by User on 14.10.2019.
-//
-
-#include "library.c"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <library.h>
 
-
+#ifndef TESTING
 int main(void) {
     my_str_t str;
     my_str_create(&str, 0);
@@ -22,3 +18,4 @@ int main(void) {
     printf("%s\n", str.data);
 
 }
+#endif

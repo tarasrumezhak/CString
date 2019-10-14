@@ -1,5 +1,7 @@
 #include "gtest/gtest.h"
 
+#define TESTING
+
 class CStringsTest : public testing::Test {
     void SetUp() {}
     void TearDown() {}

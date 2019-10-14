@@ -22,4 +22,4 @@ list(REMOVE_ITEM tests "${PROJECT_SOURCE_DIR}/main.c")
 
 include_directories("${PROJECT_SOURCE_DIR}")
 
-add_library(${lib_name} SHARED ${sources})
+add_library(cstrings SHARED ${sources})
