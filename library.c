@@ -38,6 +38,7 @@ size_t my_str_size(const my_str_t* str){
     if (str == NULL) {
         return -1;
     }
+//    return sizeof(str) / sizeof(char);
     return str->size_m;
 }
 
@@ -57,5 +58,5 @@ int my_str_empty(const my_str_t* str){
 }
 
 int my_str_getc(const my_str_t* str, size_t index){
-
+    return &(str->data) + sizeof(char) * index;
 }

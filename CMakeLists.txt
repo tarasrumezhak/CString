@@ -3,4 +3,4 @@ project(. C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_library(. SHARED library.c library.h)
+add_library(. SHARED library.c library.h main.c)
