@@ -153,3 +153,27 @@ int my_str_resize(my_str_t* str, size_t new_size, char sym) {
 
     return 0;
 }
+
+//! Копіює стрічку. Якщо reserve == true,
+//! то із тим же розміром буферу, що й вихідна,
+//! інакше -- із буфером мінімального достатнього розміру.
+//! (Старий вміст стрічки перед тим звільняє, за потреби).
+//! Повертає 0, якщо успішно, різні від'ємні числа для діагностики
+//! проблеми некоректних аргументів.
+int my_str_copy(const my_str_t* from,  my_str_t* to, int reserve) {
+    // I simply want to let go the old string
+    /* my_str_free(to); */
+
+    int status = reserve ?
+        my_str_reserve(to, from->capacity_m) :
+        my_str_reserve(to, from->size_m);
+
+    if (status != 0) {
+        printf("(my_str_copy): can't reserve memory\n");
+    }
+
+    memcpy(to->data, from->data, from->size_m);
+    to->size_m = from->size_m;
+
+    return 0;
+}
