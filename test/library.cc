@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
 extern "C" {
-#include "library.h"
+#include "cstrings.h"
 }
 
 #define TESTING

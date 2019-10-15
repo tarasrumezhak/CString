@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <library.h>
+#include <cstrings.h>
 
 #ifndef TESTING
 int main(void) {

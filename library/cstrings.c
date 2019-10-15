@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
-#include <library.h>
+#include <cstrings.h>
 
 #ifdef __WIN32
 #include <mem.h>

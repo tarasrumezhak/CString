@@ -15,10 +15,7 @@ add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
         ${CMAKE_BINARY_DIR}/googletest-build)
 
 enable_testing()
+
+add_subdirectory(library)
 add_subdirectory(test)
-
-file(GLOB sources "${PROJECT_SOURCE_DIR}/*.c")
-
-include_directories("${PROJECT_SOURCE_DIR}")
-
-add_library(cstrings SHARED ${sources})
+add_subdirectory(examples)
