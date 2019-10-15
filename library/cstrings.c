@@ -99,13 +99,14 @@ int my_str_putc(my_str_t* str, size_t index, char c){
     return 0;
 }
 
-//const char* my_str_get_cstr(my_str_t* str){
-//    *(str->data + sizeof(char)*(str->size_m + 1)) = '\0';
-//    return str->data;
-//}
+const char* my_str_get_cstr(my_str_t* str) {
+    *(str->data + (str->size_m + 1) * sizeof(char)) = '\0';
+
+    return str->data;
+}
 
 // Enlarge my_str
-int my_str_reserve(my_str_t *str, size_t buf_size){
+int my_str_reserve(my_str_t *str, size_t buf_size) {
     if (buf_size < str->capacity_m) return 0;
 
     char* temp = (char*) malloc(buf_size * 2);
@@ -116,7 +117,7 @@ int my_str_reserve(my_str_t *str, size_t buf_size){
     free(str->data);
 
     str->data = temp;
-    str->capacity_m = buf_size;
+    str->capacity_m = buf_size * 2;
 
     return 0;
 }

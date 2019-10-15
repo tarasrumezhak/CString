@@ -19,7 +19,8 @@ int main(void) {
 
     printf("Char @7 = %c\n", my_str_getc(&str, 7));
     my_str_putc(&str, 7, 'R');
-    printf("%s\n", str.data);
+    printf("str.data: %s\n", str.data);
 
+    printf("Out of my_str_get_cstr: %s\n", my_str_get_cstr(&str));
 }
 #endif
