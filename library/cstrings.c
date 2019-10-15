@@ -100,24 +100,51 @@ int my_str_putc(my_str_t* str, size_t index, char c){
 }
 
 const char* my_str_get_cstr(my_str_t* str) {
-    *(str->data + (str->size_m + 1) * sizeof(char)) = '\0';
+    *(str->data + str->size_m * sizeof(char)) = '\0';
 
     return str->data;
 }
 
-// Enlarge my_str
+// Enlarge my_str to buf_size+1
 int my_str_reserve(my_str_t *str, size_t buf_size) {
     if (buf_size < str->capacity_m) return 0;
 
-    char* temp = (char*) malloc(buf_size * 2);
+    char* allocation = (char*) malloc(buf_size);
 
-    if (temp == NULL) return -1;
+    if (allocation == NULL) return -1;
 
-    memcpy(temp, str, buf_size);
+    memcpy(allocation, str, buf_size + 1);
     free(str->data);
 
-    str->data = temp;
-    str->capacity_m = buf_size * 2;
+    str->data = allocation;
+    str->capacity_m = buf_size + 1;
+    printf("capacity after reserver: %zu", str->capacity_m);
+
+    return 0;
+}
+
+
+int my_str_resize(my_str_t* str, size_t new_size, char sym) {
+    printf("(resize) size: %zu, new_size: %zu\n", str->size_m, new_size);
+
+    if (new_size < str->size_m) {
+        str->size_m = new_size;
+        return 0;
+    }
+
+    // new_size > size_m
+    int status = my_str_reserve(&str, new_size);
+    if (status == -1) {
+        printf("(resize): can't reserve more space");
+        return -1;
+    }
+
+    // Setting extra space to "sym"
+    for (size_t idx = str->size_m+1; idx < new_size; idx++) {
+        *(str->data + idx) = sym;
+    }
+
+    str->size_m = new_size;
 
     return 0;
 }
