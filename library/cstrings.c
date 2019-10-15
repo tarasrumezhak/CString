@@ -47,8 +47,11 @@ int my_str_from_cstr(my_str_t* str, const char* original, size_t original_size){
 
     // Not enough memory
     if (original_size > str->capacity_m) {
-        // TODO Realloc
-        return -2;
+        int status = my_str_reserve(&str, original_size*2);
+        if (status == -1) {
+            printf("(my_str_from_cstr) allocation failed");
+            return -2;
+        }
     }
 
     memcpy(str->data, original, original_size);
@@ -105,42 +108,41 @@ const char* my_str_get_cstr(my_str_t* str) {
     return str->data;
 }
 
-// Enlarge my_str to buf_size+1
+// Enlarge my_str buffer to buf_size+1
 int my_str_reserve(my_str_t *str, size_t buf_size) {
-    if (buf_size < str->capacity_m) return 0;
+    buf_size++;
+
+    if (buf_size <= str->capacity_m) return 0;
 
     char* allocation = (char*) malloc(buf_size);
 
     if (allocation == NULL) return -1;
 
-    memcpy(allocation, str, buf_size + 1);
+    memcpy(allocation, str->data, str->size_m);
     free(str->data);
 
     str->data = allocation;
-    str->capacity_m = buf_size + 1;
-    printf("capacity after reserver: %zu", str->capacity_m);
+    str->capacity_m = buf_size;
 
     return 0;
 }
 
 
 int my_str_resize(my_str_t* str, size_t new_size, char sym) {
-    printf("(resize) size: %zu, new_size: %zu\n", str->size_m, new_size);
-
     if (new_size < str->size_m) {
         str->size_m = new_size;
         return 0;
     }
 
     // new_size > size_m
-    int status = my_str_reserve(&str, new_size);
+    int status = my_str_reserve(&str, new_size*2);
     if (status == -1) {
         printf("(resize): can't reserve more space");
         return -1;
     }
 
     // Setting extra space to "sym"
-    for (size_t idx = str->size_m+1; idx < new_size; idx++) {
+    for (size_t idx = str->size_m; idx < new_size; idx++) {
         *(str->data + idx) = sym;
     }
 
