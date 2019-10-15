@@ -7,7 +7,7 @@
 int main(void) {
 
     my_str_t str;
-    my_str_create(&str, 100);
+    my_str_create(&str, 0);
     char c[] = "whatever";
     my_str_from_cstr(&str, c, sizeof(c));
 

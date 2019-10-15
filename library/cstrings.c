@@ -27,37 +27,39 @@ void my_str_free(my_str_t* str){
 
 // Створити стрічку із буфером вказаного розміру із переданої С-стрічки
 // buf_size is actually a capacity
-int my_str_from_cstr(my_str_t* str, const char* original, size_t original_size){
-    size_t real_original_size;
+int my_str_from_cstr(my_str_t* str, const char* original, size_t buf_size){
+    size_t original_size;
 
     // Measure size of the original string ourselves
     const char* idx;
     for (idx = original; *idx; ++idx);
-    real_original_size = idx - original;
+    original_size = idx - original;
 
     //! [buf_size] менший за її [c-string] розмір -- вважати помилкою, не змінювати стрічку.
-    if (real_original_size > original_size && original_size != 0) {
+    if (original_size > buf_size && buf_size != 0) {
         return -1;
     }
 
     // They decided to not give us the size of the original string
-    if (original_size == 0) {
-        original_size = real_original_size;
+    if (buf_size == 0) {
+        buf_size = original_size;
+        printf("(from_cstr): 0 buf_size, now it's %zu\n", buf_size);
     }
 
-    // Not enough memory
-    if (original_size > str->capacity_m) {
-        int status = my_str_reserve(&str, original_size*2);
+    // Satiate buf_size
+    if (buf_size > str->capacity_m) {
+        printf("(from_cstr): allocate some mem?, now it's %zu\n", buf_size);
+        int status = my_str_reserve(str, buf_size);
+
         if (status == -1) {
             printf("(my_str_from_cstr) allocation failed");
             return -2;
         }
     }
 
+    // Copy passed string
     memcpy(str->data, original, original_size);
-
     str->size_m = original_size;
-    str->capacity_m = original_size * 2 + 1;
 
     return 0;
 }
@@ -115,12 +117,13 @@ int my_str_reserve(my_str_t *str, size_t buf_size) {
     if (buf_size <= str->capacity_m) return 0;
 
     char* allocation = (char*) malloc(buf_size);
-
     if (allocation == NULL) return -1;
 
+    // Copy old string
     memcpy(allocation, str->data, str->size_m);
     free(str->data);
 
+    // Update old pointer
     str->data = allocation;
     str->capacity_m = buf_size;
 
