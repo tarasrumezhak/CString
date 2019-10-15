@@ -111,7 +111,7 @@ const char* my_str_get_cstr(my_str_t* str) {
 }
 
 // Enlarge my_str buffer to buf_size+1
-int my_str_reserve(my_str_t *str, size_t buf_size) {
+int my_str_reserve(my_str_t* str, size_t buf_size) {
     buf_size++;
 
     if (buf_size <= str->capacity_m) return 0;
@@ -138,7 +138,7 @@ int my_str_resize(my_str_t* str, size_t new_size, char sym) {
     }
 
     // new_size > size_m
-    int status = my_str_reserve(&str, new_size*2);
+    int status = my_str_reserve(str, new_size*2);
     if (status == -1) {
         printf("(resize): can't reserve more space");
         return -1;
