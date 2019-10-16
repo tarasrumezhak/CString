@@ -14,8 +14,7 @@ TEST(CStringsTest, my_str_from_cstr_empty_without_buf_size) {
     ASSERT_EQ(status, 0);
     ASSERT_STREQ(original, str.data);
     ASSERT_EQ(str.size_m, 8);
-    // Is there a need to allocate more?
-    ASSERT_EQ(str.capacity_m, 9);
+    ASSERT_EQ(str.capacity_m, 8);
 }
 
 TEST(CStringsTest, my_str_from_cstr_empty_with_actual_bufsize) {
@@ -28,7 +27,7 @@ TEST(CStringsTest, my_str_from_cstr_empty_with_actual_bufsize) {
     ASSERT_EQ(status, 0);
     ASSERT_STREQ(original, str.data);
     ASSERT_EQ(str.size_m, 8);
-    ASSERT_EQ(str.capacity_m, 101);
+    ASSERT_EQ(str.capacity_m, 100);
 }
 
 TEST(CStringsTest, my_str_from_cstr_prealloc) {
@@ -41,5 +40,5 @@ TEST(CStringsTest, my_str_from_cstr_prealloc) {
     ASSERT_EQ(status, 0);
     ASSERT_STREQ(original, str.data);
     ASSERT_EQ(str.size_m, 8);
-    ASSERT_EQ(str.capacity_m, 101);
+    ASSERT_EQ(str.capacity_m, 100);
 }

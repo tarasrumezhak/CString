@@ -5,7 +5,6 @@ extern "C" {
 }
 
 TEST(CStringsTest, my_str_reserve_empty) {
-    // TODO Fixtures
     my_str_t str;
     my_str_create(&str, 100);
 
@@ -13,8 +12,7 @@ TEST(CStringsTest, my_str_reserve_empty) {
 
     ASSERT_EQ(status, 0);
     ASSERT_EQ(str.size_m, 0);
-    // Extra 1
-    ASSERT_EQ(str.capacity_m, 401);
+    ASSERT_EQ(str.capacity_m, 400);
 }
 
 TEST(CStringsTest, my_str_reserve_not_empty) {
@@ -26,7 +24,7 @@ TEST(CStringsTest, my_str_reserve_not_empty) {
 
     my_str_reserve(&str, 400);
 
-    ASSERT_EQ(str.capacity_m, 401);
+    ASSERT_EQ(str.capacity_m, 400);
     ASSERT_EQ(str.size_m, 8);
 
     ASSERT_STREQ(my_str_get_cstr(&str), "whatever");

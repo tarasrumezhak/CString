@@ -11,7 +11,7 @@ TEST(CStringsTest, my_str_create) {
 
     ASSERT_EQ(status, 0);
     ASSERT_EQ(str.size_m, 0);
-    ASSERT_EQ(str.capacity_m, 1);
+    ASSERT_EQ(str.capacity_m, 0);
     ASSERT_STREQ(str.data, "");
 }
 
@@ -22,6 +22,6 @@ TEST(CStringsTest, my_str_create_more) {
 
     ASSERT_EQ(status, 0);
     ASSERT_EQ(str.size_m, 0);
-    ASSERT_EQ(str.capacity_m, 101);
+    ASSERT_EQ(str.capacity_m, 100);
     ASSERT_STREQ(str.data, "");
 }

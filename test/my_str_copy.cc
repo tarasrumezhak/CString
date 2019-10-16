@@ -14,7 +14,7 @@ TEST(CStringsTest, my_str_copy_empty) {
     int status = my_str_copy(&source, &dest, 0);
 
     EXPECT_EQ(status, 0);
-    ASSERT_EQ(dest.capacity_m, 1);
+    ASSERT_EQ(dest.capacity_m, 0);
 
     my_str_free(&source);
     my_str_free(&dest);
@@ -32,7 +32,7 @@ TEST(CStringsTest, my_str_copy_dest_empty_dont_reserve) {
     int status = my_str_copy(&source, &dest, 0);
 
     EXPECT_EQ(status, 0);
-    ASSERT_EQ(dest.capacity_m, 9);
+    ASSERT_EQ(dest.capacity_m, 8);
     ASSERT_EQ(dest.size_m, 8);
     ASSERT_STREQ(my_str_get_cstr(&dest), my_str_get_cstr(&source));
 
@@ -52,7 +52,7 @@ TEST(CStringsTest, my_str_copy_dest_empty_reserve_please) {
     int status = my_str_copy(&source, &dest, 1);
 
     EXPECT_EQ(status, 0);
-    ASSERT_EQ(dest.capacity_m, 102);
+    ASSERT_EQ(dest.capacity_m, 100);
     ASSERT_EQ(dest.size_m, 8);
     ASSERT_STREQ(my_str_get_cstr(&dest), my_str_get_cstr(&source));
 
@@ -73,8 +73,8 @@ TEST(CStringsTest, my_str_copy_dest_not_empty_dont_reserve) {
     int status = my_str_copy(&source, &dest, 0);
 
     EXPECT_EQ(status, 0);
-    ASSERT_EQ(dest.capacity_m, 102);
     ASSERT_EQ(dest.size_m, 8);
+    ASSERT_EQ(dest.capacity_m, 14);
     ASSERT_STREQ(my_str_get_cstr(&dest), my_str_get_cstr(&source));
 
     my_str_free(&source);
