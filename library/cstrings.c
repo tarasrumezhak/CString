@@ -367,7 +367,21 @@ int my_str_resize(my_str_t* str, size_t new_size, char sym) {
 //! Знайти першу підстрічку в стрічці, повернути номер її
 //! початку або (size_t)(-1), якщо не знайдено. from -- місце, з якого починати шукати.
 //! Якщо більше за розмір -- вважати, що не знайдено.
-size_t my_str_find(const my_str_t* str, const my_str_t* tofind, size_t from);
+size_t my_str_find(const my_str_t* str, const my_str_t* tofind, size_t from) {
+    for (size_t i = from; i < str->size_m; ++i) {
+        if (my_str_getc(str, i) == my_str_getc(tofind, 0)) {
+            size_t j = 0;
+            while (my_str_getc(str, i + j) == my_str_getc(tofind, j)) {
+                if (j == tofind->size_m - 1) {
+                    return i;
+                    j++;
+                }
+            }
+        }
+    }
+    return (size_t)(-1);
+}
+
 
 //! Порівняти стрічки, повернути 0, якщо рівні (за вмістом!)
 //! -1 (або інше від'ємне значення), якщо перша менша,

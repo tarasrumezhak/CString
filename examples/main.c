@@ -22,5 +22,16 @@ int main(void) {
     printf("str.data: %s\n", str.data);
 
     printf("Out of my_str_get_cstr: %s\n", my_str_get_cstr(&str));
+
+    my_str_t str_main;
+    char txt[] = "regabcff";
+    my_str_from_cstr(&str_main, txt, sizeof(txt));
+
+    my_str_t str_sub;
+    char sub[] = "abc";
+    my_str_from_cstr(&str_sub, sub, sizeof(sub));
+
+    size_t index = 0;
+    printf(my_str_find(&str_main, &str_sub, index));
 }
 #endif
