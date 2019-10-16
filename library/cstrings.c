@@ -387,7 +387,20 @@ size_t my_str_find(const my_str_t* str, const my_str_t* tofind, size_t from) {
 //! -1 (або інше від'ємне значення), якщо перша менша,
 //! 1 (або інше додатне значення) -- якщо друга.
 //! Поведінка має бути такою ж, як в strcmp.
-int my_str_cmp(const my_str_t* str1, const my_str_t* str2);
+int my_str_cmp(const my_str_t* str1, const my_str_t* str2){
+    if (str1->size_m == str2->size_m) {
+        for (size_t i = 0; i < str1->size_m; ++i) {
+            if (my_str_getc(str1, i) < my_str_getc(str2, i)) {
+                return -1;
+            } else if (my_str_getc(str1, i) > my_str_getc(str2, i)) {
+                return 1;
+            }
+        }
+        return 0;
+    }
+    if (str1->size_m < str2->size_m) { return -1;}
+    return 1;
+}
 
 //! Порівняти стрічку із С-стрічкою, повернути 0, якщо рівні (за вмістом!)
 //! -1 (або інше від'ємне значення), якщо перша менша,

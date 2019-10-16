@@ -5,8 +5,6 @@ extern "C" {
 }
 
 TEST(CStringsTest, my_str_find) {
-    my_str_t str;
-
     my_str_t str_main;
     char txt[] = "regabcff";
     my_str_from_cstr(&str_main, txt, sizeof(txt));
@@ -22,8 +20,6 @@ TEST(CStringsTest, my_str_find) {
 }
 
 TEST(CStringsTest, my_str_find) {
-    my_str_t str;
-
     my_str_t str_main;
     char txt[] = "regabff";
     my_str_from_cstr(&str_main, txt, sizeof(txt));
