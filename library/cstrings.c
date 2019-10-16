@@ -160,7 +160,24 @@ const char* my_str_get_cstr(my_str_t* str) {
 //! Повертає 0, якщо успішно,
 //! -1 -- якщо передано нульовий вказівник,
 //! -2 -- помилка виділення додаткової пам'яті.
-int my_str_pushback(my_str_t* str, char c);
+int my_str_pushback(my_str_t* str, char c) {
+    if (!str) return -1;
+
+    if (str->size_m >= str->capacity_m) {
+        int status = my_str_reserve(str, 2 * str->capacity_m);
+
+        if (status != 0) {
+            fprintf(stderr, "(my_str_pushback): failed to reserve more space");
+            return -2;
+        }
+    }
+
+    *(str->data + str->size_m) = c;
+    str->size_m++;
+
+    return 0;
+}
+
 
 //! Викидає символ з кінця.
 //! Повертає його, якщо успішно,
