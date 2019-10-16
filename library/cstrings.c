@@ -183,7 +183,13 @@ int my_str_pushback(my_str_t* str, char c) {
 //! Повертає його, якщо успішно,
 //! -1 -- якщо передано нульовий вказівник,
 //! -2 -- якщо стрічка порожня.
-int my_str_popback(my_str_t* str);
+int my_str_popback(my_str_t* str) {
+    if (!str) return -1;
+    if (my_str_empty(str)) return -2;
+
+    // Or do we insert null byte?
+    return *(str->data + --str->size_m);
+}
 
 //! Копіює стрічку. Якщо reserve == true,
 //! то із тим же розміром буферу, що й вихідна,

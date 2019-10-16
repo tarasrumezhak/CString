@@ -14,6 +14,7 @@ TEST(CStringsTest, my_str_pushback_no_alloc) {
     EXPECT_EQ(status, 0);
     ASSERT_EQ(str.size_m, 16);
     ASSERT_EQ(str.capacity_m, 100);
+    ASSERT_STREQ(my_str_get_cstr(&str), "merry christmas!");
 
     my_str_free(&str);
 }
@@ -29,6 +30,7 @@ TEST(CStringsTest, my_str_pushback_with_alloc) {
     ASSERT_EQ(str.size_m, 16);
     // Twice the previous capacity
     ASSERT_EQ(str.capacity_m, 30);
+    ASSERT_STREQ(my_str_get_cstr(&str), "merry christmas!");
 
     my_str_free(&str);
 }
