@@ -222,7 +222,30 @@ void my_str_clear(my_str_t* str) {
 //! Вставити символ у стрічку в заданій позиції, змістивши решту символів праворуч.
 //! За потреби -- збільшує буфер.
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
-int my_str_insert_c(my_str_t* str, char c, size_t pos);
+int my_str_insert_c(my_str_t* str, char c, size_t pos) {
+    if (!str) return -1;
+
+    if (pos > str->size_m) {
+        fprintf(stderr, "(my_str_insert_c): out-of-bounds pos\n");
+        return -1;
+    }
+
+    if (str->size_m >= str->capacity_m) {
+        int status = my_str_reserve(str, 2 * str->capacity_m);
+
+        if (status != 0) {
+            fprintf(stderr, "(my_str_insert_c): can't reserve more space\n");
+            return -2;
+        }
+    }
+
+    memmove(str->data + pos + 1, str->data + pos, str->size_m - pos);
+
+    *(str->data + pos) = c;
+    str->size_m++;
+
+    return 0;
+}
 
 //! Вставити стрічку в заданій позиції, змістивши решту символів праворуч.
 //! За потреби -- збільшує буфер.
