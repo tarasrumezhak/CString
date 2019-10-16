@@ -406,17 +406,54 @@ int my_str_cmp(const my_str_t* str1, const my_str_t* str2){
 //! -1 (або інше від'ємне значення), якщо перша менша,
 //! 1 (або інше додатне значення) -- якщо друга.
 //! Поведінка має бути такою ж, як в strcmp.
-int my_str_cmp_cstr(const my_str_t* str1, const char* cstr2);
+size_t len_const_char(const char* cstr) {
+    size_t size = 0;
+    while (cstr[size] != '\0') size++;
+    return size;
+}
+
+int my_str_cmp_cstr(const my_str_t* str1, const char* cstr2){
+    if (str1->size_m == len_const_char(cstr2)) {
+        for (size_t i = 0; i < str1->size_m; ++i) {
+            if (my_str_getc(str1, i) < cstr2[i]) {
+                return -1;
+            } else if (my_str_getc(str1, i) > cstr2[i]) {
+                return 1;
+            }
+        }
+        return 0;
+    }
+    if (str1->size_m < len_const_char(cstr2)) { return -1;}
+    return 1;
+}
 
 //! Знайти перший символ в стрічці, повернути його номер
 //! або (size_t)(-1), якщо не знайдено. from -- місце, з якого починати шукати.
 //! Якщо більше за розмір -- вважати, що не знайдено.
-size_t my_str_find_c(const my_str_t* str, char tofind, size_t from);
+size_t my_str_find_c(const my_str_t* str, char tofind, size_t from) {
+    if (from > str->size_m) {
+        return (size_t)(-1);
+    }
+    for (size_t i = from; i < str->size_m; ++i) {
+        if (my_str_getc(str, i) == tofind) {
+            return i;
+        }
+    }
+    return (size_t)(-1);
+}
 
 //! Знайти символ в стрічці, для якого передана
 //! функція повернула true, повернути його номер
 //! або (size_t)(-1), якщо не знайдено:
-size_t my_str_find_if(const my_str_t* str, int (*predicat)(int));
+size_t my_str_find_if(const my_str_t* str, int (*predicat)(int)) {
+    for (size_t i = 0; i < str->size_m; ++i) {
+        int pred = predicat((int)i);
+        if (pred == 1) {
+            return i;
+        }
+    }
+    return (size_t)(-1);
+}
 
 //!===========================================================================
 //! Ввід-вивід
