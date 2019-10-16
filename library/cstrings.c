@@ -243,10 +243,11 @@ int my_str_substr_cstr(const my_str_t* from, char* to, size_t beg, size_t end);
 //! решту буфера) із старого буфера та звільняє його.
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
 int my_str_reserve(my_str_t* str, size_t buf_size) {
-    if (buf_size < str->capacity_m) return 0;
+    if (!str) return -3;
+    if (buf_size <= str->capacity_m) return 0;
 
     char* allocation = (char*) malloc(buf_size + 1);
-    if (allocation == NULL) return -1;
+    if (!allocation) return -2;
 
     // Copy old string
     memcpy(allocation, str->data, str->size_m);
@@ -258,11 +259,27 @@ int my_str_reserve(my_str_t* str, size_t buf_size) {
 
     return 0;
 }
+
 //! Робить буфер розміром, рівний необхідному:
 //! так, щоб capacity_m == size_t. Єдиний "офіційний"
 //! спосіб зменшити фактичний розмір буфера.
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
-int my_str_shrink_to_fit(my_str_t* str);
+int my_str_shrink_to_fit(my_str_t* str) {
+    if (!str) return -3;
+
+    char* allocation = (char*) malloc(str->size_m + 1);
+    if (!allocation) return -2;
+
+    // Copy old string
+    memcpy(allocation, str->data, str->size_m);
+    free(str->data);
+
+    // Update old pointer
+    str->data = allocation;
+    str->capacity_m = str->size_m;
+
+    return 0;
+}
 
 //! Якщо new_size менший за поточний розмір -- просто
 //! відкидає зайві символи (зменшуючи size_m). Якщо
