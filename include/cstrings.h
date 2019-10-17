@@ -243,4 +243,6 @@ int my_str_write(const my_str_t* str, FILE* file);
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
 int my_str_read_file_delim(my_str_t* str, FILE* file, char delimiter);
 
+//! strlen
+size_t my_str_length(my_str_t* str);
 #endif //CSTRING_LIBRARY_H
