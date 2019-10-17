@@ -468,21 +468,73 @@ size_t my_str_find_if(const my_str_t* str, int (*predicat)(int)) {
 //! збільшуйте буфер.
 //! Рекомендую скористатися fgets().
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
-int my_str_read_file(my_str_t* str, FILE* file);
+int my_str_read_file(my_str_t* str, FILE* file) {
+    if (!str || !file) return -1;
+
+    size_t reading_gap_size = 4;
+    size_t idx = -reading_gap_size+1;
+
+    do {
+        idx += reading_gap_size - 1;
+
+        if (str->size_m + reading_gap_size >= str->capacity_m) {
+            int status = str->capacity_m < reading_gap_size ?
+                my_str_reserve(str, 2 * reading_gap_size) :
+                my_str_reserve(str, 2 * str->capacity_m);
+
+            if (status != 0) {
+                fprintf(stderr, "(my_str_read_file): can't reserve more space\n");
+                return -1;
+            }
+        }
+    } while (fgets(str->data + idx, reading_gap_size, file));
+
+    // FIXME Crude update of the actual size
+    str->size_m = my_str_length(str);
+
+    return 0;
+}
 
 //! Аналог my_str_read_file, із stdin.
-int my_str_read(my_str_t* str);
+int my_str_read(my_str_t* str) {
+    int status = my_str_read_file(str, stdin);
+    if (status != 0) {
+        return -1;
+    }
+
+    return 0;
+}
 
 //! Записати стрічку в файл:
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
-int my_str_write_file(const my_str_t* str, FILE* file);
+int my_str_write_file(const my_str_t* str, FILE* file) {
+    if (str->size_m == 0) return 0;
+    // Very lazy
+    char* string = my_str_get_cstr(str);
+    fputs(string, file);
+
+    return 0;
+}
 
 //! Записати стрічку на консоль:
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
-int my_str_write(const my_str_t* str, FILE* file);
+int my_str_write(const my_str_t* str, FILE* file) {
+    int status = my_str_write_file(str, stdout);
+    if (status != 0) {
+        return status;
+    }
+
+    return 0;
+}
 
 //! На відміну від my_str_read_file(), яка читає до кінця файлу,
 //! читає по вказаний delimiter, за потреби
 //! збільшує стрічку.
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
 int my_str_read_file_delim(my_str_t* str, FILE* file, char delimiter);
+
+size_t my_str_length(my_str_t* str) {
+    const char* idx;
+    for (idx = str->data; *idx; ++idx);
+    return idx - str->data;
+}
