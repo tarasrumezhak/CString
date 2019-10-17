@@ -368,18 +368,19 @@ int my_str_resize(my_str_t* str, size_t new_size, char sym) {
 //! початку або (size_t)(-1), якщо не знайдено. from -- місце, з якого починати шукати.
 //! Якщо більше за розмір -- вважати, що не знайдено.
 size_t my_str_find(const my_str_t* str, const my_str_t* tofind, size_t from) {
-    printf("In function");
+//    printf("In function");
     for (size_t i = from; i < str->size_m; ++i) {
-        printf("in for %zu", i);
+//        printf("in for %zu", i);
         if (my_str_getc(str, i) == my_str_getc(tofind, 0)) {
-            printf("in if %f   %f", my_str_getc(str, i), my_str_getc(tofind, 0));
+//            printf("in if %i   %i", my_str_getc(str, i), my_str_getc(tofind, 0));
             size_t j = 0;
             while (my_str_getc(str, i + j) == my_str_getc(tofind, j)) {
-                printf("In while %f   %f", my_str_getc(str, i + j), my_str_getc(tofind, j));
+//                printf("In while %i   %i\n", my_str_getc(str, i + j), my_str_getc(tofind, j));
+//                printf("j and size %zu  %zu\n", j, tofind->size_m - 1);
                 if (j == tofind->size_m - 1) {
                     return i;
-                    j++;
                 }
+                j++;
             }
         }
     }
