@@ -6,10 +6,12 @@ extern "C" {
 
 TEST(CStringsTest, my_str_find) {
     my_str_t str_main;
+    my_str_create(&str_main, 0);
     char txt[] = "regabcff";
     my_str_from_cstr(&str_main, txt, sizeof(txt));
 
     my_str_t str_sub;
+    my_str_create(&str_sub, 0);
     char sub[] = "abc";
     my_str_from_cstr(&str_sub, sub, sizeof(sub));
 
@@ -24,10 +26,12 @@ TEST(CStringsTest, my_str_find) {
 
 TEST(CStringsTest, my_str_find_not_found) {
     my_str_t str_main;
+    my_str_create(&str_main, 0);
     char txt[] = "regabff";
     my_str_from_cstr(&str_main, txt, sizeof(txt));
 
     my_str_t str_sub;
+    my_str_create(&str_sub, 0);
     char sub[] = "abc";
     my_str_from_cstr(&str_sub, sub, sizeof(sub));
 
