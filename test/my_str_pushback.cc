@@ -4,6 +4,16 @@ extern "C" {
 #include "cstrings.h"
 }
 
+TEST(CStringsTest, my_str_pushback_empty) {
+    my_str_t str;
+    my_str_create(&str, 0);
+    my_str_pushback(&str, '!');
+
+    ASSERT_STREQ(my_str_get_cstr(&str), "!");
+    ASSERT_EQ(str.size_m, 1);
+    ASSERT_EQ(str.capacity_m, 64);
+}
+
 TEST(CStringsTest, my_str_pushback_no_alloc) {
     my_str_t str;
     my_str_create(&str, 0);

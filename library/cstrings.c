@@ -27,7 +27,6 @@ int my_str_create(my_str_t* str, size_t buf_size) {
 
     str->data = malloc(buf_size + 1);
 
-    // Failed allocation
     if (str->data == NULL) {
         return -1;
     }
@@ -140,6 +139,9 @@ int my_str_putc(my_str_t* str, size_t index, char c) {
 //! Якщо в буфері було зарезервовано на байт більше за макс. розмір, можна
 //! просто додати нульовий символ в кінці та повернути вказівник data.
 const char* my_str_get_cstr(my_str_t* str) {
+    if (str == NULL)
+        return NULL;
+
     *(str->data + str->size_m * sizeof(char)) = '\0';
 
     return str->data;
@@ -162,7 +164,9 @@ int my_str_pushback(my_str_t* str, char c) {
         return -1;
 
     if (str->size_m >= str->capacity_m) {
-        int status = my_str_reserve(str, 2 * str->capacity_m);
+        int status = str->capacity_m == 0 ?
+            my_str_reserve(str, 64) :
+            my_str_reserve(str, 2 * str->capacity_m);
 
         if (status != 0) {
             fprintf(stderr, "(my_str_pushback): failed to reserve more space");
@@ -181,8 +185,11 @@ int my_str_pushback(my_str_t* str, char c) {
 //! -1 -- якщо передано нульовий вказівник,
 //! -2 -- якщо стрічка порожня.
 int my_str_popback(my_str_t* str) {
-    if (!str) return -1;
-    if (my_str_empty(str)) return -2;
+    if (str == NULL)
+        return -1;
+
+    if (my_str_empty(str))
+        return -2;
 
     // Or do we insert null byte?
     return *(str->data + --str->size_m);
@@ -195,6 +202,9 @@ int my_str_popback(my_str_t* str) {
 //! Повертає 0, якщо успішно, різні від'ємні числа для діагностики
 //! проблеми некоректних аргументів.
 int my_str_copy(const my_str_t* from,  my_str_t* to, int reserve) {
+    if (from == NULL || to == NULL)
+        return -1;
+
     int status = reserve ?
         my_str_reserve(to, from->capacity_m) :
         my_str_reserve(to, from->size_m);
@@ -213,6 +223,9 @@ int my_str_copy(const my_str_t* from,  my_str_t* to, int reserve) {
 //! стрічка продовжує існувати, буфер той самий, того ж розміру, що був,
 //! лише містить 0 символів -- єдине, що вона робить, це size_m = 0.
 void my_str_clear(my_str_t* str) {
+    if (str == NULL)
+        return;
+
     str->size_m = 0;
 }
 
@@ -220,7 +233,8 @@ void my_str_clear(my_str_t* str) {
 //! За потреби -- збільшує буфер.
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
 int my_str_insert_c(my_str_t* str, char c, size_t pos) {
-    if (!str) return -1;
+    if (str == NULL)
+        return -1;
 
     if (pos > str->size_m) {
         fprintf(stderr, "(my_str_insert_c): out-of-bounds pos\n");
@@ -248,7 +262,9 @@ int my_str_insert_c(my_str_t* str, char c, size_t pos) {
 //! За потреби -- збільшує буфер.
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
 int my_str_insert(my_str_t* str, const my_str_t* from, size_t pos) {
-    if (!from) return -1;
+    if (str == NULL || from == NULL)
+        return -1;
+
     int status;
     for (int i = 0; i < from->size_m; i++) {
         status = my_str_insert_c(str, *(from->data + i), pos);
@@ -261,6 +277,10 @@ int my_str_insert(my_str_t* str, const my_str_t* from, size_t pos) {
 //! За потреби -- збільшує буфер.
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
 int my_str_insert_cstr(my_str_t* str, const char* from, size_t pos){
+    if (str == NULL || from == NULL)
+        return -1;
+
+
     my_str_t new_my_str;
     my_str_create(&new_my_str, 0);
     my_str_from_cstr(&new_my_str, from, 0);
@@ -273,6 +293,9 @@ int my_str_insert_cstr(my_str_t* str, const char* from, size_t pos){
 //! За потреби -- збільшує буфер.
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
 int my_str_append(my_str_t* str, const my_str_t* from){
+    if (str == NULL || from == NULL)
+        return -1;
+
     return my_str_insert(str, from, str->size_m);
 }
 
@@ -280,6 +303,9 @@ int my_str_append(my_str_t* str, const my_str_t* from){
 //! За потреби -- збільшує буфер.
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
 int my_str_append_cstr(my_str_t* str, const char* from){
+    if (str == NULL || from == NULL)
+        return -1;
+
     return my_str_insert_cstr(str, from, str->size_m);
 }
 
@@ -289,6 +315,9 @@ int my_str_append_cstr(my_str_t* str, const char* from){
 //! За потреби -- збільшує буфер.
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
 int my_str_substr(const my_str_t* from, my_str_t* to, size_t beg, size_t end){
+    if (from == NULL || from == NULL)
+        return -1;
+
     if (beg > from->size_m){
         return -1;
     }
@@ -310,6 +339,9 @@ int my_str_substr(const my_str_t* from, my_str_t* to, size_t beg, size_t end){
 //! C-string варіант my_str_substr().
 //! Вважати, що в цільовій С-стрічці достатньо місц.
 int my_str_substr_cstr(const my_str_t* from, char* to, size_t beg, size_t end){
+    if (from == NULL || from == NULL)
+        return -1;
+
     if (beg > from->size_m){
         return -1;
     }
@@ -387,6 +419,9 @@ int my_str_shrink_to_fit(my_str_t* str) {
 //! розміром стрічки зрозуміла?
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
 int my_str_resize(my_str_t* str, size_t new_size, char sym) {
+    if (str == NULL)
+        return -1;
+
     if (new_size < str->size_m) {
         str->size_m = new_size;
         return 0;
@@ -417,6 +452,10 @@ int my_str_resize(my_str_t* str, size_t new_size, char sym) {
 //! початку або (size_t)(-1), якщо не знайдено. from -- місце, з якого починати шукати.
 //! Якщо більше за розмір -- вважати, що не знайдено.
 size_t my_str_find(const my_str_t* str, const my_str_t* tofind, size_t from) {
+    if (str == NULL || tofind == NULL)
+        return -1;
+
+
     for (size_t i = from; i < str->size_m; ++i) {
         if (my_str_getc(str, i) == my_str_getc(tofind, 0)) {
             size_t j = 0;
@@ -438,6 +477,10 @@ size_t my_str_find(const my_str_t* str, const my_str_t* tofind, size_t from) {
 //! 1 (або інше додатне значення) -- якщо друга.
 //! Поведінка має бути такою ж, як в strcmp.
 int my_str_cmp(const my_str_t* str1, const my_str_t* str2){
+    if (str1 == NULL || str2 == NULL)
+        return -1;
+
+
     if (str1->size_m == str2->size_m) {
         for (size_t i = 0; i < str1->size_m; ++i) {
             if (my_str_getc(str1, i) < my_str_getc(str2, i)) {
@@ -457,12 +500,18 @@ int my_str_cmp(const my_str_t* str1, const my_str_t* str2){
 //! 1 (або інше додатне значення) -- якщо друга.
 //! Поведінка має бути такою ж, як в strcmp.
 static size_t len_const_char(const char* cstr) {
+    if (cstr == NULL)
+        return 0;
+
     size_t size = 0;
     while (cstr[size] != '\0') size++;
     return size;
 }
 
 int my_str_cmp_cstr(const my_str_t* str1, const char* cstr2){
+    if (str1 == NULL || cstr2 == NULL)
+        return -1;
+
     if (str1->size_m == len_const_char(cstr2)) {
         for (size_t i = 0; i < str1->size_m; ++i) {
             if (my_str_getc(str1, i) < cstr2[i]) {
@@ -481,6 +530,9 @@ int my_str_cmp_cstr(const my_str_t* str1, const char* cstr2){
 //! або (size_t)(-1), якщо не знайдено. from -- місце, з якого починати шукати.
 //! Якщо більше за розмір -- вважати, що не знайдено.
 size_t my_str_find_c(const my_str_t* str, char tofind, size_t from) {
+    if (str == NULL)
+        return -1;
+
     if (from > str->size_m) {
         return (size_t)(-1);
     }
@@ -496,6 +548,9 @@ size_t my_str_find_c(const my_str_t* str, char tofind, size_t from) {
 //! функція повернула true, повернути його номер
 //! або (size_t)(-1), якщо не знайдено:
 size_t my_str_find_if(const my_str_t* str, int (*predicat)(int)) {
+    if (str == NULL)
+        return -1;
+
     for (size_t i = 0; i < str->size_m; ++i) {
         if (predicat(my_str_getc(str, i)) == 1) {
             return i;
@@ -514,35 +569,6 @@ size_t my_str_find_if(const my_str_t* str, int (*predicat)(int)) {
 //! Рекомендую скористатися fgets().
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
 int my_str_read_file(my_str_t* str, FILE* file) {
-    // FIXME I tried
-    // if (str == NULL || file == NULL)
-    //     return -1;
-
-    // // buffering size
-    // size_t reading_gap_size = 1024;
-    // int idx = -reading_gap_size+1;
-
-    // do {
-    //     idx += reading_gap_size - 1;
-
-    //     if (str->size_m + reading_gap_size >= str->capacity_m) {
-    //         int status = str->capacity_m < reading_gap_size ?
-    //             my_str_reserve(str, 2 * reading_gap_size) :
-    //             my_str_reserve(str, 2 * str->capacity_m);
-
-    //         if (status != 0) {
-    //             fprintf(stderr, "(my_str_read_file): can't reserve more space\n");
-    //             return -1;
-    //         }
-    //     }
-    //     printf("here is something: %s\n", str->data);
-    // } while (fgets(str->data + idx, reading_gap_size, file));
-
-    // // FIXME That's a very crude update of the actual size
-    // str->size_m = my_str_length(str);
-
-    // return 0;
-
     return my_str_read_file_delim(str, file, EOF);
 }
 
@@ -592,6 +618,9 @@ int my_str_read_file_delim(my_str_t* str, FILE* file, char delimiter) {
 }
 
 size_t my_str_length(my_str_t* str) {
+    if (str == NULL)
+        return 0;
+
     const char* idx;
     for (idx = str->data; *idx; ++idx);
     return idx - str->data;
