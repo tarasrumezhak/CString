@@ -95,6 +95,7 @@ int main(void) {
     printf("First appearance of char \'_\': %ld\n", my_str_find_c(&new_str, '_', 0));
 
     printf("Is symbol \'.\' in string?: %ld\n", my_str_find_if(&new_str, is_a));
+    my_str_free(&str_sub);
 
     // Ввід-вивід
     printf("\n// Ввід-вивід\n");
@@ -111,6 +112,9 @@ int main(void) {
     printf("String read from file: %s\n", my_str_get_cstr(&tmp_str1));
     my_str_read_file_delim(&tmp_str2, tmp_file, '_');
     printf("String read from file up to delimiter: %s\n", my_str_get_cstr(&tmp_str2));
+    my_str_free(&new_str);
+    my_str_free(&tmp_str1);
+    my_str_free(&tmp_str2);
     printf("Done!\n");
 }
 #endif
