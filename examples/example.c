@@ -4,12 +4,13 @@
 #include <ctype.h>
 
 // Freestyle here
-static int less(const void* p1, const void* p2) {
+static inline int greater(const void* p1, const void* p2) {
     char c1 = *(char*) p1;
     char c2 = *(char*) p2;
 
-    char value1 = isupper(c1) ? c1 + 32 : c1;
-    char value2 = isupper(c2) ? c2 + 32 : c2;
+    // Upper case is compared with lower case on equal terms
+    char value1 = c1 + (isupper(c1) ? 'a' - 'A' : 0);
+    char value2 = c2 + (isupper(c2) ? 'a' - 'A' : 0);
 
     return value1 > value2;
 }
@@ -25,17 +26,18 @@ int sort_letters(FILE* source, FILE* dest) {
         return 1;
     }
 
+    // Making sure the last word is not left out
     my_str_pushback(&string, '!');
 
-    char* lidx = string.data;
+    char* lidx;
     char* ridx;
-    for (ridx = string.data; *ridx; ridx++) {
+    for (lidx = ridx = string.data; *ridx; ridx++) {
         // Threat anything non alpha as a word break
         if (!isalpha(*ridx)) {
             // Unless there were consecutive breaks -
-            // sort the space from the break until this break
+            // sort the space from the last break until this break
             if (ridx != lidx) {
-                qsort(lidx, ridx-lidx, sizeof(char), less);
+                qsort(lidx, ridx-lidx, sizeof(char), greater);
             }
 
             lidx = ridx;

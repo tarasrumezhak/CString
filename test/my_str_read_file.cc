@@ -11,13 +11,14 @@ TEST(CStringsTest, my_str_read_file_not_empty) {
     FILE* fp = tmpfile();
     if (!fp) fprintf(stderr, "can't create tmpfile\n");
 
-    fprintf(fp, "sin²(θ) is odious to me");
+    fputs("sin²(θ) is odious to me \n sin²(θ) is odious to me", fp);
     rewind(fp);
 
     int status = my_str_read_file(&str, fp);
 
     ASSERT_EQ(status, 0);
-    ASSERT_STREQ(my_str_get_cstr(&str), "sin²(θ) is odious to me");
+    ASSERT_EQ(str.size_m, 53);
+    ASSERT_STREQ(my_str_get_cstr(&str), "sin²(θ) is odious to me \n sin²(θ) is odious to me");
 
     fclose(fp);
     my_str_free(&str);

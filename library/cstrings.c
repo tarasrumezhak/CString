@@ -25,7 +25,7 @@ int my_str_create(my_str_t* str, size_t buf_size) {
     str->capacity_m = buf_size;
     str->size_m = 0;
 
-    str->data = (char*) malloc(buf_size + 1);
+    str->data = malloc(buf_size + 1);
 
     // Failed allocation
     if (str->data == NULL) {
@@ -512,32 +512,36 @@ size_t my_str_find_if(const my_str_t* str, int (*predicat)(int)) {
 //! Рекомендую скористатися fgets().
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
 int my_str_read_file(my_str_t* str, FILE* file) {
-    if (str == NULL || file == NULL)
-        return -1;
+    // FIXME I tried
+    // if (str == NULL || file == NULL)
+    //     return -1;
 
-    // buffering size
-    size_t reading_gap_size = 4096;
-    int idx = -reading_gap_size+1;
+    // // buffering size
+    // size_t reading_gap_size = 1024;
+    // int idx = -reading_gap_size+1;
 
-    do {
-        idx += reading_gap_size - 1;
+    // do {
+    //     idx += reading_gap_size - 1;
 
-        if (str->size_m + reading_gap_size >= str->capacity_m) {
-            int status = str->capacity_m < reading_gap_size ?
-                my_str_reserve(str, 2 * reading_gap_size) :
-                my_str_reserve(str, 2 * str->capacity_m);
+    //     if (str->size_m + reading_gap_size >= str->capacity_m) {
+    //         int status = str->capacity_m < reading_gap_size ?
+    //             my_str_reserve(str, 2 * reading_gap_size) :
+    //             my_str_reserve(str, 2 * str->capacity_m);
 
-            if (status != 0) {
-                fprintf(stderr, "(my_str_read_file): can't reserve more space\n");
-                return -1;
-            }
-        }
-    } while (fgets(str->data + idx, reading_gap_size, file));
+    //         if (status != 0) {
+    //             fprintf(stderr, "(my_str_read_file): can't reserve more space\n");
+    //             return -1;
+    //         }
+    //     }
+    //     printf("here is something: %s\n", str->data);
+    // } while (fgets(str->data + idx, reading_gap_size, file));
 
-    // FIXME That's a very crude update of the actual size
-    str->size_m = my_str_length(str);
+    // // FIXME That's a very crude update of the actual size
+    // str->size_m = my_str_length(str);
 
-    return 0;
+    // return 0;
+
+    return my_str_read_file_delim(str, file, EOF);
 }
 
 //! Аналог my_str_read_file, із stdin.
@@ -551,7 +555,7 @@ int my_str_write_file(const my_str_t* str, FILE* file) {
     if (str == NULL || file == NULL)
         return -1;
 
-    // Very lazy :'(
+    // Very lazy
     fputs(my_str_get_cstr(((my_str_t*) str)), file);
 
     return 0;

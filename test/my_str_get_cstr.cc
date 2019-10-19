@@ -18,10 +18,9 @@ TEST(CStringsTest, my_str_get_cstr) {
     my_str_t str;
     my_str_create(&str, 100);
 
-    char original[] = "whatever";
-    int status = my_str_from_cstr(&str, original, 0);
+    int status = my_str_from_cstr(&str, "over there \n over here", 0);
 
-    const char* cstring = my_str_get_cstr(&str);
-
-    ASSERT_STREQ(original, cstring);
+    ASSERT_EQ(status, 0);
+    ASSERT_EQ(str.size_m, 22);
+    ASSERT_STREQ(my_str_get_cstr(&str), "over there \n over here");
 }
