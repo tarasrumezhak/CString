@@ -8,7 +8,6 @@ static int less(const void* p1, const void* p2) {
     char c1 = *(char*) p1;
     char c2 = *(char*) p2;
 
-    // :=)
     char value1 = isupper(c1) ? c1 + 32 : c1;
     char value2 = isupper(c2) ? c2 + 32 : c2;
 
@@ -26,8 +25,7 @@ int sort_letters(FILE* source, FILE* dest) {
         return 1;
     }
 
-    // :=)
-    my_str_pushback(&string, ' ');
+    my_str_pushback(&string, '!');
 
     char* lidx = string.data;
     char* ridx;
