@@ -1,37 +1,29 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <cstrings.h>
+#include "example.h"
 
-#ifndef TESTING
-int main(void) {
+int main(int argc, char** argv) {
+    if (argc < 3) {
+        printf("\n");
+        printf("here, have some guidance\n");
+        printf("usage is: %s <filepath> <filepath>\n", argv[0]);
+        printf("\n");
 
-    my_str_t str;
-    my_str_create(&str, 0);
-    char c[] = "whatever";
-    my_str_from_cstr(&str, c, sizeof(c));
+        return 0;
+    }
 
-    printf("Capacity: %zu\n", str.capacity_m);
-    printf("CString: %s\n", c);
+    FILE* source = fopen(argv[1], "r");
+    if (source == NULL) {
+        fprintf(stderr, "sorry, can't open: %s\n", argv[1]);
 
-    printf("Data: %s,  Capacity: %zu, Size: %zu\n", str.data, str.capacity_m, str.size_m);
-    printf("my_str_size: %zu\n", my_str_size(&str));
+        return 1;
+    }
 
-    printf("Char @7 = %c\n", my_str_getc(&str, 7));
-    my_str_putc(&str, 7, 'R');
-    printf("str.data: %s\n", str.data);
+    FILE* dest = fopen(argv[2], "w");
+    if (dest == NULL) {
+        fprintf(stderr, "sorry, can't open: %s\n", argv[2]);
 
-    printf("Out of my_str_get_cstr: %s\n", my_str_get_cstr(&str));
+        return 1;
+    }
 
-    my_str_t str_main;
-    char txt[] = "regabcff";
-    my_str_from_cstr(&str_main, txt, sizeof(txt));
-
-    my_str_t str_sub;
-    char sub[] = "abc";
-    my_str_from_cstr(&str_sub, sub, sizeof(sub));
-
-    size_t index = 0;
-    printf(my_str_find(&str_main, &str_sub, index));
+    return sort_letters(source, dest);
 }
-#endif
