@@ -6,14 +6,14 @@ extern "C" {
 #include "example.h"
 }
 
-TEST(CStringsTest, example) {
+TEST(CStringsTest, example_small_lowercase) {
     FILE* source = tmpfile();
     if (source == NULL) {
         fprintf(stderr, "can't create tmpfile\n");
         return;
     }
 
-    fputs("zxyabc", source);
+    fputs("merry christmas everybody!", source);
     rewind(source);
 
     FILE* dest = tmpfile();
@@ -29,7 +29,65 @@ TEST(CStringsTest, example) {
     fgets(data, sizeof(data), dest);
 
     ASSERT_EQ(status, 0);
-    ASSERT_STRCASEEQ(data, "abcxyz");
+    ASSERT_STRCASEEQ(data, "emrry achimrsst bdeeorvyy!");
+
+    fclose(source);
+    fclose(dest);
+}
+
+TEST(CStringsTest, example_small_mixedcase) {
+    FILE* source = tmpfile();
+    if (source == NULL) {
+        fprintf(stderr, "can't create tmpfile\n");
+        return;
+    }
+
+    fputs("Merry Christmas Everybody!", source);
+    rewind(source);
+
+    FILE* dest = tmpfile();
+    if (dest == NULL) {
+        fprintf(stderr, "can't create tmpfile\n");
+        return;
+    }
+
+    int status = sort_letters(source, dest);
+    rewind(dest);
+
+    char data[1024];
+    fgets(data, sizeof(data), dest);
+
+    ASSERT_EQ(status, 0);
+    ASSERT_STRCASEEQ(data, "eMrry aChimrsst bdEeorvyy!");
+
+    fclose(source);
+    fclose(dest);
+}
+
+TEST(CStringsTest, example_large_mixedcase) {
+    FILE* source = tmpfile();
+    if (source == NULL) {
+        fprintf(stderr, "can't create tmpfile\n");
+        return;
+    }
+
+    fputs("Merry Christmas Everybody!", source);
+    rewind(source);
+
+    FILE* dest = tmpfile();
+    if (dest == NULL) {
+        fprintf(stderr, "can't create tmpfile\n");
+        return;
+    }
+
+    int status = sort_letters(source, dest);
+    rewind(dest);
+
+    char data[1024];
+    fgets(data, sizeof(data), dest);
+
+    ASSERT_EQ(status, 0);
+    ASSERT_STRCASEEQ(data, "eMrry aChimrsst bdEeorvyy!");
 
     fclose(source);
     fclose(dest);
