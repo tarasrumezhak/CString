@@ -3,6 +3,10 @@
 #include <string.h>
 #include <cstrings.h>
 
+inline static int is_a(int symbol) {
+    return symbol == '.';
+}
+
 #ifndef TESTING
 int main(void) {
 
@@ -93,7 +97,6 @@ int main(void) {
     printf("Are new string and sub string equal?: %s\n", my_str_cmp(&new_str, &str_sub)?"false":"true");
     printf("Are new string and Cstring equal?: %s\n", my_str_cmp_cstr(&new_str, "what____")?"false":"true");
     printf("First appearance of char \'_\': %ld\n", my_str_find_c(&new_str, '_', 0));
-    int is_a(int symbol) { if (symbol == '.') { return 1; }return 0; }
     printf("Is symbol \'.\' in string?: %ld\n", my_str_find_if(&new_str, is_a));
     my_str_free(&str_sub);
 

@@ -4,8 +4,8 @@ extern "C" {
 #include "cstrings.h"
 }
 
-int is_a(int letter) {
-    if (letter == 97) {
+static int is_a(int letter) {
+    if (letter == 'a') {
         return 1;
     }
     return 0;
