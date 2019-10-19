@@ -251,33 +251,79 @@ int my_str_insert_c(my_str_t* str, char c, size_t pos) {
 //! Вставити стрічку в заданій позиції, змістивши решту символів праворуч.
 //! За потреби -- збільшує буфер.
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
-int my_str_insert(my_str_t* str, const my_str_t* from, size_t pos);
+int my_str_insert(my_str_t* str, const my_str_t* from, size_t pos) {
+    if (!from) return -1;
+    int status;
+    for (int i = 0; i < from->size_m; i++) {
+        status = my_str_insert_c(str, *(from->data + i), pos);
+        pos++;
+    }
+    return status;
+}
 
 //! Вставити C-стрічку в заданій позиції, змістивши решту символів праворуч.
 //! За потреби -- збільшує буфер.
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
-int my_str_insert_cstr(my_str_t* str, const char* from, size_t pos);
+int my_str_insert_cstr(my_str_t* str, const char* from, size_t pos){
+    my_str_t new_my_str;
+    my_str_create(&new_my_str, 0);
+    my_str_from_cstr(&new_my_str, from, 0);
+    int status = my_str_insert(str, &new_my_str, pos);
+    my_str_free(&new_my_str);
+    return status;
+}
 
 //! Додати стрічку в кінець.
 //! За потреби -- збільшує буфер.
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
-int my_str_append(my_str_t* str, const my_str_t* from);
+int my_str_append(my_str_t* str, const my_str_t* from){
+    return my_str_insert(str, from, str->size_m);
+}
 
 //! Додати С-стрічку в кінець.
 //! За потреби -- збільшує буфер.
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
-int my_str_append_cstr(my_str_t* str, const char* from);
+int my_str_append_cstr(my_str_t* str, const char* from){
+    return my_str_insert_cstr(str, from, str->size_m);
+}
 
 //! Скопіювати підстрічку, із beg включно, по end не включно ([beg, end)).
 //! Якщо end за межами початкової стрічки -- це не помилка, копіювати всі
 //! символи до кінця. beg має бути в її межах -- якщо beg>size, це помилка.
 //! За потреби -- збільшує буфер.
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
-int my_str_substr(const my_str_t* from, my_str_t* to, size_t beg, size_t end);
+int my_str_substr(const my_str_t* from, my_str_t* to, size_t beg, size_t end){
+    if (beg > from->size_m){
+        return -1;
+    }
+    if (end > from->size_m){
+        end = from->size_m;
+    }
+    if (to->size_m >= to->capacity_m){
+        int status = my_str_reserve(to, end - beg);
+        if (status != 0){
+            return -2;
+        }
+    }
+
+    memcpy(to->data + to->size_m, from->data + beg, end - beg);
+    to->size_m += end - beg;
+    return 0;
+}
 
 //! C-string варіант my_str_substr().
 //! Вважати, що в цільовій С-стрічці достатньо місц.
-int my_str_substr_cstr(const my_str_t* from, char* to, size_t beg, size_t end);
+int my_str_substr_cstr(const my_str_t* from, char* to, size_t beg, size_t end){
+    if (beg > from->size_m){
+        return -1;
+    }
+    if (end > from->size_m){
+        end = from->size_m;
+    }
+    memcpy(to, from->data + beg, end - beg);
+    to[end - beg] = '\0';
+    return 0;
+}
 
 //!===========================================================================
 //! Маніпуляції розміром стрічки
