@@ -82,6 +82,8 @@ int my_str_from_cstr(my_str_t* str, const char* original, size_t buf_size){
 //! Ремарка: free() нормально працює із NULL.
 void my_str_free(my_str_t* str) {
     free(str->data);
+    str->size_m = 0;
+    str->capacity_m = 0;
 }
 //!============================================================================
 //! Інформація про стрічку
