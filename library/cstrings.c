@@ -58,12 +58,10 @@ int my_str_from_cstr(my_str_t* str, const char* original, size_t buf_size){
     // They decided to not give us the size of the original string
     if (buf_size == 0) {
         buf_size = original_size;
-        printf("(from_cstr): 0 buf_size, now it's %zu\n", buf_size);
     }
 
     // Satiate buf_size
     if (buf_size > str->capacity_m) {
-        printf("(from_cstr): allocate some mem?, now it's %zu\n", buf_size);
         int status = my_str_reserve(str, buf_size);
 
         if (status == -1) {
