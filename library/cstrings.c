@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <cstrings.h>
@@ -161,7 +162,8 @@ const char* my_str_get_cstr(my_str_t* str) {
 //! -1 -- якщо передано нульовий вказівник,
 //! -2 -- помилка виділення додаткової пам'яті.
 int my_str_pushback(my_str_t* str, char c) {
-    if (!str) return -1;
+    if (str == NULL)
+        return -1;
 
     if (str->size_m >= str->capacity_m) {
         int status = my_str_reserve(str, 2 * str->capacity_m);
@@ -172,8 +174,7 @@ int my_str_pushback(my_str_t* str, char c) {
         }
     }
 
-    *(str->data + str->size_m) = c;
-    str->size_m++;
+    *(str->data + str->size_m++) = c;
 
     return 0;
 }
@@ -401,10 +402,12 @@ size_t my_str_find_if(const my_str_t* str, int (*predicat)(int));
 //! Рекомендую скористатися fgets().
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
 int my_str_read_file(my_str_t* str, FILE* file) {
-    if (!str || !file) return -1;
+    if (str == NULL || file == NULL)
+        return -1;
 
+    // buffering size, it's purposefully that small
     size_t reading_gap_size = 4;
-    size_t idx = -reading_gap_size+1;
+    int idx = -reading_gap_size+1;
 
     do {
         idx += reading_gap_size - 1;
@@ -421,7 +424,7 @@ int my_str_read_file(my_str_t* str, FILE* file) {
         }
     } while (fgets(str->data + idx, reading_gap_size, file));
 
-    // FIXME Crude update of the actual size
+    // FIXME That's a very crude update of the actual size
     str->size_m = my_str_length(str);
 
     return 0;
@@ -429,41 +432,47 @@ int my_str_read_file(my_str_t* str, FILE* file) {
 
 //! Аналог my_str_read_file, із stdin.
 int my_str_read(my_str_t* str) {
-    int status = my_str_read_file(str, stdin);
-    if (status != 0) {
-        return -1;
-    }
-
-    return 0;
+    return my_str_read_file(str, stdin) ? -1 : 0;
 }
 
 //! Записати стрічку в файл:
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
 int my_str_write_file(const my_str_t* str, FILE* file) {
     if (str->size_m == 0) return 0;
-    // Very lazy
-    char* string = my_str_get_cstr(str);
-    fputs(string, file);
+
+    // Very lazy :'(
+    fputs(my_str_get_cstr(((my_str_t*) str)), file);
 
     return 0;
 }
 
 //! Записати стрічку на консоль:
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
-int my_str_write(const my_str_t* str, FILE* file) {
-    int status = my_str_write_file(str, stdout);
-    if (status != 0) {
-        return status;
-    }
-
-    return 0;
+int my_str_write(const my_str_t* str) {
+    return my_str_write_file(str, stdout) ? -1 : 0;
 }
 
 //! На відміну від my_str_read_file(), яка читає до кінця файлу,
 //! читає по вказаний delimiter, за потреби
 //! збільшує стрічку.
 //! У випадку помилки повертає різні від'ємні числа, якщо все ОК -- 0.
-int my_str_read_file_delim(my_str_t* str, FILE* file, char delimiter);
+int my_str_read_file_delim(my_str_t* str, FILE* file, char delimiter) {
+    if (str == NULL || file == NULL)
+        return -1;
+
+    int buf;
+    while((buf = fgetc(file)) != EOF) {
+        if (buf == delimiter)
+            break;
+
+        int status = my_str_pushback(str, buf);
+
+        if (status != 0)
+            return status;
+    }
+
+    return 0;
+}
 
 size_t my_str_length(my_str_t* str) {
     const char* idx;
